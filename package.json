@@ -4,7 +4,7 @@
   "private": true,
   "main": "src/index.tsx",
   "dependencies": {
-    "@datorama/akita": "1.9.3",
+    "@datorama/akita": "4.17.1",
     "react": "16.5.0",
     "react-dom": "16.5.0",
     "react-router-dom": "4.3.1",
