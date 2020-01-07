@@ -5,6 +5,7 @@
   "main": "src/index.tsx",
   "dependencies": {
     "@datorama/akita": "4.17.1",
+    "@mindspace-io/utils": "1.1.2",
     "react": "16.12.0",
     "react-dom": "16.12.0",
     "react-router-dom": "5.1.2",
