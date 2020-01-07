@@ -1,50 +1,41 @@
 import * as React from 'react';
+import { Todo } from '../state';
 
-export class Todo extends React.PureComponent<any> {
-  toggleTodo = () => this.props.toggleTodo(this.props.id);
-  onDelete = () => this.props.onDelete(this.props.id);
-
-  render() {
-    return (
-      <li
-        style={{
-          textDecoration: this.props.completed ? 'line-through' : 'none'
-        }}
-      >
-        <span
-          onClick={this.toggleTodo}
-          style={{
-            marginRight: '10px'
-          }}
-        >
-          {this.props.text}
-        </span>
-        <button onClick={this.onDelete}>Delete</button>
-      </li>
-    );
-  }
+export interface TodoListProps {
+  todos     : Todo[];
+  onToggle: (item: Todo) => void;
+  onDelete: (item: Todo) => void;
 }
 
-export class TodoList extends React.PureComponent<any> {
-  toggleTodo = id => this.props.toggleTodo(id);
-  onDelete = id => this.props.deleteTodo(id);
+export interface TodoItemProps {
+  todo     : Todo;
+  toggleComplete: (item: Todo) => void;
+  deleteTodo: (item: Todo) => void;
+}
 
-  constructor(props: any) {
-    super(props);
-  }
+export const TodoList: React.FC<TodoListProps> = ({todos, onToggle, onDelete}) => {
+  return (
+    <ul>
+      {todos.map(todo => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          toggleComplete={onToggle}
+          deleteTodo={onDelete}
+        />
+      ))}
+    </ul>
+  );
+}
 
-  render() {
-    return (
-      <ul>
-        {this.props.todos.map(todo => (
-          <Todo
-            key={todo.id}
-            {...todo}
-            toggleTodo={this.toggleTodo}
-            onDelete={this.onDelete}
-          />
-        ))}
-      </ul>
-    );
-  }
+export const TodoItem: React.FC<TodoItemProps> = ({todo, toggleComplete, deleteTodo}) => {
+  return (
+    <li style={{ textDecoration: todo.completed ? 'line-through' : 'none' }}>
+      <span style={{ marginRight: '10px' }} >
+        {todo.text}
+      </span>
+      <button onClick={() => deleteTodo(todo)}>Delete</button>
+      <button onClick={() => toggleComplete(todo)}>Toggle as Complete</button>
+    </li>
+  );
 }

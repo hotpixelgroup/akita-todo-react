@@ -1,64 +1,27 @@
 import * as React from 'react';
-import { ID, StateHistoryPlugin } from '@datorama/akita';
-import { todosQuery } from '../state/todos.query';
-import { todosService } from '../state/todos.service';
-import { Todo } from '../state/todo.model';
-import { AddTodo } from './AddTodo';
-import { Filters } from './Filters';
+import { useTodosHook } from '../state';
+
 import { TodoList } from './Todos';
-import { untilDestroyed } from '../take-until';
+import { TodoForm } from './TodoForm';
+import { Filters } from './Filters';
 
-export class TodosPageComponent extends React.PureComponent<any> {
-  state: { todos: Todo[]; filter: string } = { todos: [], filter: '' };
-  stateHistory = new StateHistoryPlugin(todosQuery);
+export const TodosPage: React.FC = () => {
+  const {filter, todos, facade} = useTodosHook();
+  const onChange = (value:any) => facade.updateFilter(value);
+  const history = facade.history;
 
-  constructor(props: any) {
-    super(props);
-  }
-
-  add = (text: string) => todosService.add(text);
-
-  toggleTodo = (id: ID) => todosService.complete(id);
-
-  deleteTodo = (id: ID) => todosService.delete(id);
-
-  changeFilter = ({ target: { value } }) => {
-    todosService.updateFilter(value);
-  }
-
-  undo = () => this.stateHistory.undo();
-  redo = () => this.stateHistory.redo();
-
-  componentDidMount() {
-    todosQuery.selectVisibleTodos$
-      .pipe(untilDestroyed(this))
-      .subscribe(todos => this.setState({ todos }));
-
-    todosQuery.selectVisibilityFilter$
-      .pipe(untilDestroyed(this))
-      .subscribe(filter => this.setState({ filter }));
-  }
-
-  render() {
-    const hasPast = this.stateHistory.hasPast;
-    const hasFuture = this.stateHistory.hasFuture;
-
-    return (
-      <div>
-        <button onClick={this.undo} disabled={!hasPast}>
-          Undo
-        </button>
-        <button onClick={this.redo} disabled={!hasFuture}>
-          Redo
-        </button>
-        <AddTodo add={this.add} />
-        <TodoList
-          todos={this.state.todos}
-          toggleTodo={this.toggleTodo}
-          deleteTodo={this.deleteTodo}
-        />
-        <Filters onChange={this.changeFilter} active={this.state.filter} />
-      </div>
-    );
-  }
+  return (
+    <div>
+      <button onClick={() => history.undo()} disabled={!history.hasPast}>   Undo </button>
+      <button onClick={() => history.redo()} disabled={!history.hasFuture}> Redo </button>
+      <TodoForm onAdd={(item) => facade.addTodo(item)} />
+      <TodoList
+        todos={todos}
+        onToggle={(item) => facade.toggleComplete(item)}
+        onDelete={(item) => facade.deleteTodo(item)}
+      />
+      <Filters onChange={onChange} selectedFilter={filter} />
+    </div>
+  );
 }
+
