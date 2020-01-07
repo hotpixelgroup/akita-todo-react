@@ -4,16 +4,14 @@
   "private": true,
   "main": "src/index.tsx",
   "dependencies": {
-    "@datorama/akita": "4.17.1",
-    "@mindspace-io/utils": "1.1.2",
-    "react": "16.12.0",
-    "react-dom": "16.12.0",
-    "react-router-dom": "5.1.2",
+    "@datorama/akita": "^4.17.1",
+    "@mindspace-io/utils": "^1.1.2",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-router-dom": "^5.1.2",
     "react-scripts-ts": "^4.0.8",
-    "react-test-renderer": "latest",
-    "react-testing-library": "latest",
-    "recompose": "latest",
-    "rxjs": "6.5.4"
+    "@testing-library/react": "latest",
+    "rxjs": "^6.5.4"
   },
   "scripts": {
     "start": "react-scripts-ts start",
@@ -22,18 +20,13 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@types/chai": "4.1.4",
-    "@types/enzyme": "3.1.13",
-    "@types/enzyme-adapter-react-15": "1.0.3",
-    "@types/enzyme-adapter-react-16": "latest",
+    "@angular/core": "^8.2.14",
     "@types/jest": "^22.1.3",
     "@types/node": "^9.4.6",
-    "@types/react": "16.9.17",
-    "@types/react-dom": "16.9.4",
-    "@types/react-router-dom": "5.1.2",
-    "@types/react-test-renderer": "16.0.2",
-    "@types/recompose": "0.30.7",
-    "typescript": "^2.9.2"
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-router-dom": "^5.1.2",
+    "typescript": "^3.7.4"
   },
   "keywords": [
     "akita",

@@ -1,7 +1,7 @@
 import { StateHistoryPlugin } from '@datorama/akita';
 
-import { createTodo } from './todo.model';
-import { TodosStore, TodosQuery, todosQuery, todosStore as store } from './todos.store';
+import { createTodo, Todo } from './todo.model';
+import { TodosStore, TodosQuery, todosQuery, todosStore } from './todos.store';
 
 export class TodosFacade {
   readonly filter$ = this.query.filter$;
@@ -10,15 +10,15 @@ export class TodosFacade {
   readonly history: StateHistoryPlugin;
 
   constructor(private store: TodosStore, private query: TodosQuery) {
-    this.history = new StateHistoryPlugin(todosQuery)
+    this.history = new StateHistoryPlugin(todosQuery);
   }
 
   updateFilter(filter: number) {
     this.store.update(state => ({ ...state, filter }) );
   }
 
-  toggleComplete({ id }) {
-    store.update(id, entity => ({ completed: !entity.completed }));
+  toggleComplete({ id }: Todo) {
+    this.store.update(id, entity => ({ completed: !entity.completed }));
   }
 
   addTodo(text: string) {
@@ -27,9 +27,9 @@ export class TodosFacade {
     );
   }
 
-  deleteTodo({id}) {
+  deleteTodo({id}: Todo) {
     this.store.remove(id);
   }
 }
 
-export const facade = new TodosFacade(store, todosQuery);
+export const facade = new TodosFacade(todosStore, todosQuery);

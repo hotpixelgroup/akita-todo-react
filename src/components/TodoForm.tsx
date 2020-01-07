@@ -1,13 +1,13 @@
 import * as React from 'react';
 
-export type TodoFormProps = {
+export interface TodoFormProps {
   onAdd: (text: string) => void;
-}
+};
 
 export const TodoForm: React.FC<TodoFormProps> = ({onAdd}) => {
   const elRef = React.useRef<HTMLInputElement>();
   return (
-    <div>
+    <div className="todoForm">
       <form
         onSubmit={e => {
           const text = elRef.current.value;
@@ -19,8 +19,8 @@ export const TodoForm: React.FC<TodoFormProps> = ({onAdd}) => {
         }}
       >
         <input ref={elRef} />
-        <button type="submit">Add Todo</button>
+        <button type="submit" style={{marginLeft: '20px'}}>Add Todo</button>
       </form>
     </div>
   );
-}
+};

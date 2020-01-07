@@ -1,7 +1,8 @@
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { QueryEntity } from '@datorama/akita';
 import { switchCase} from '@mindspace-io/utils';
-import { combineLatest } from 'rxjs';
 
 import { Todo, VISIBILITY_FILTER } from './todo.model';
 
@@ -20,14 +21,14 @@ export class TodosStore extends EntityStore<TodosState, Todo> {
 
 export class TodosQuery extends QueryEntity<TodosState, Todo> {
   filter$       = this.select(state => state.filter);
-  visibleTodos$ = combineLatest( this.filter$, this.selectAll(), gatherVisibleTodos);
+  visibleTodos$ = combineLatest([this.filter$, this.selectAll()]).pipe(map(gatherVisibleTodos));
 
   constructor(protected store: TodosStore) {
     super(store);
   }
 }
 
-function gatherVisibleTodos(filter, todos): Todo[] {
+function gatherVisibleTodos([filter, todos]): Todo[] {
   const withFilter = switchCase({
     [VISIBILITY_FILTER.SHOW_ACTIVE]   : () => todos.filter(t => !t.completed),
     [VISIBILITY_FILTER.SHOW_COMPLETED]: () => todos.filter(t => t.completed)

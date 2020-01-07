@@ -26,3 +26,40 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+.todoPage {
+  padding: 20px;
+}
+.toolbar {  
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    place-content: center space-between;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.toolbar > .history {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+    width: 110px;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    align-items: center;    
+}
+
+.history  button, .todoItem button {
+
+  margin-left: 20px;
+  
+}
+
+.todoForm {
+  width: 50vw;
+}
+
+.todoForm input {
+  width: 30vw;
+}

@@ -1,22 +1,25 @@
 import * as React from 'react';
+import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { TodosPage } from './components/TodosPage';
+
 import './App.css';
 
-const logo = require('./logo.svg');
+export const App = () => (
+  <Router>
+    <div>
+      <ul>
+      <li>
+          <Link to="/about">About</Link>
+        </li>
+        <li>
+          <Link to="/">Todos</Link>
+        </li>
+      </ul>
 
-class App extends React.Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
-}
+      <hr />
 
-export default App;
+      <Route exact={true} path="/" component={TodosPage} />
+      <Route path="/about" render={() => <p>State management with Akita</p>} />
+    </div>
+  </Router>
+);

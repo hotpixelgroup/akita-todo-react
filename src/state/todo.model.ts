@@ -1,6 +1,6 @@
 import { ID, guid } from '@datorama/akita';
 
-export type Todo = {
+export interface Todo {
   id: ID;
   text: string;
   completed: boolean;

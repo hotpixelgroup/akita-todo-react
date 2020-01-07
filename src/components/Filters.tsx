@@ -1,11 +1,11 @@
 import * as React from 'react';
 
-export type FiltersProps = {
+export interface FiltersProps {
   onChange: (filter: string) => void;
   selectedFilter: string;
-}
+};
 
-export const Filters: React.FC<FiltersProps> = ({onChange,selectedFilter}) => {
+export const Filters: React.FC<FiltersProps> = ({onChange, selectedFilter}) => {
   return (
     <div>
       <span>Show: </span>
@@ -16,4 +16,4 @@ export const Filters: React.FC<FiltersProps> = ({onChange,selectedFilter}) => {
       </select>
     </div>
   );
-}
+};
