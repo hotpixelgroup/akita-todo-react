@@ -6,11 +6,12 @@
   "dependencies": {
     "@datorama/akita": "^4.17.1",
     "@mindspace-io/utils": "^1.1.2",
+    "@testing-library/react": "latest",
+    "immer": "^5.1.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-router-dom": "^5.1.2",
     "react-scripts-ts": "^4.0.8",
-    "@testing-library/react": "latest",
     "rxjs": "^6.5.4"
   },
   "scripts": {

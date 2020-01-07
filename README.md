@@ -96,3 +96,25 @@ export class TodosFacade {
 
 export const facade = new TodosFacade(todosStore, todosQuery);
 ```
+
+### Enforcing immutable data with ImmerJS
+
+Immer.js will protect all state data from external, direct mutations.
+
+Using the `produce(...)` function the facade can easily mutate a **draft** version:
+
+```ts
+import { produce } from 'immer';
+
+export class TodosFacade {
+
+  updateFilter(filter: VISIBILITY_FILTER) {
+    this.store.update( produce((draft:TodosState) => {
+      // Mutate draft properties directly and easily
+      draft.filter = filter;
+    }));
+  }
+
+}
+
+```

@@ -14,7 +14,7 @@ export function createTodo(text: string): Todo {
   };
 }
 
-export enum VISIBILITY_FILTER {
+export const enum VISIBILITY_FILTER {
   SHOW_COMPLETED = 'SHOW_COMPLETED',
   SHOW_ACTIVE = 'SHOW_ACTIVE',
   SHOW_ALL = 'SHOW_ALL'

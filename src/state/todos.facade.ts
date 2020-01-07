@@ -1,7 +1,8 @@
 import { StateHistoryPlugin } from '@datorama/akita';
+import { produce } from 'immer';
 
-import { createTodo, Todo } from './todo.model';
-import { TodosStore, TodosQuery, todosQuery, todosStore } from './todos.store';
+import { createTodo, Todo, VISIBILITY_FILTER } from './todo.model';
+import { TodosStore, TodosQuery, todosQuery, todosStore, TodosState } from './todos.store';
 
 export class TodosFacade {
   readonly filter$ = this.query.filter$;
@@ -13,8 +14,10 @@ export class TodosFacade {
     this.history = new StateHistoryPlugin(todosQuery);
   }
 
-  updateFilter(filter: number) {
-    this.store.update(state => ({ ...state, filter }) );
+  updateFilter(filter: VISIBILITY_FILTER) {
+    this.store.update( produce((draft:TodosState) => { 
+      draft.filter = filter; 
+    }));
   }
 
   toggleComplete({ id }: Todo) {

@@ -20,7 +20,7 @@ export const TodoItem: React.FC<TodoItemProps> = ({todo, toggleComplete, deleteT
         {todo.text}
       </span>
       <button onClick={() => deleteTodo(todo)}>Delete</button>
-      <button onClick={() => toggleComplete(todo)}>Toggle as Complete</button>
+      <button onClick={() => toggleComplete(todo)}>Toggle Status</button>
     </li>
   );
 };
