@@ -14,21 +14,20 @@
     "noImplicitReturns": true,
     "resolveJsonModule": true,
     "importHelpers": true,
-    "isolatedModules": true,
+    "isolatedModules": false,
     "noEmit": true,
     "jsx": "react",
-    "module": "esnext",
+    "module": "CommonJS",
+    "target": "ES2016",
     "typeRoots": ["node_modules/@types"],
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": ["dom", "dom.iterable", "es2016"],
     "skipDefaultLibCheck": true,
   },
   "exclude": [
     "node_modules",
     "build",
     "scripts",
-    "acceptance-tests",
     "webpack",
     "jest",
-    "src/setupTests.ts"
   ]
 }

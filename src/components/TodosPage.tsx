@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IonFooter, IonToolbar, IonButton } from '@ionic/react';
 
 import { TodoList, AddTodo, Filters } from './index';
-import { facade } from '../state';
+import { useTodosHook } from '../state/todos.hook';
 
 const todoBar = {
   display: 'flex', 
@@ -13,17 +13,18 @@ const todoBar = {
 } as React.CSSProperties;
 
 export const TodosPage: React.FC = () => {
+  const [filter, todos, facade] = useTodosHook()
   const history = facade.history;
 
   return (
     <>
       <div style={todoBar}>
         <AddTodo onAdd={(item) => facade.addTodo(item)} />
-        <Filters selectedFilter={facade.filter} 
+        <Filters selectedFilter={filter} 
                  onChange={(value: any) => facade.updateFilter(value)} />
       </div>
       
-      <TodoList todos={facade.todos}
+      <TodoList todos={todos}
                 onToggle={(item) => facade.toggleComplete(item)}
                 onDelete={(item) => facade.deleteTodo(item)}      />
 
