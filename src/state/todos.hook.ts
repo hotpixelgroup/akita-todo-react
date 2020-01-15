@@ -1,18 +1,17 @@
-import {useState, useEffect} from 'react';
+ 
+ import {useObservable} from '@mindspace-io/utils';
 
-import { Todo} from './todo.model';
 import { facade, TodosFacade } from './todos.facade';
-import { TodosState } from './todo.reducer';
+import { VISIBILITY_FILTER as v, Todo} from './todo.model';
 
 export type TodoHookTuple = [string, Todo[], TodosFacade ];
 
 export function useTodosHook(): TodoHookTuple {
-  const [, setState] = useState<TodosState>(null as TodosState);
+  const [filter] = useObservable(facade.filter$, v.SHOW_ALL);
+  const [todos] = useObservable(facade.todos$, []);
   
-  useEffect(() => {
-    const subscription = facade.subscribe(setState);
-    return () => subscription.unsubscribe();
-  }, []);
-
-  return [facade.filter, facade.todos, facade];
+  return [filter, todos, facade];
 }
+
+
+

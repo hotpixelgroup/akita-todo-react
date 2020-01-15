@@ -1,63 +1,31 @@
-import { VISIBILITY_FILTER as Filter } from './todo.model';
-import { 
-  TodosState, TodosStateCallback, TodoActionType,   
-  todoReducer, gatherVisibleTodos, TodoActionType as at 
-} from './todo.reducer';
 
-export const NOOP = () => {};
+import { produce } from 'immer';
+import { StateHistoryPlugin } from '@datorama/akita';
+import { createTodo, VISIBILITY_FILTER, Todo} from './todo.model';
+import { TodosStore, TodosQuery, TodosState, todosQuery, todosStore} from './todos.store';
 
-export interface Subscription {
-  unsubscribe: () => void;
+function toggleCompleted(todo: Todo) {
+  return { completed: !todo.completed };
 }
 
 export class TodosFacade {
-  private subscribers: TodosStateCallback[] = [];
-  private cache: Readonly<TodosState> = {
-    filter: Filter.SHOW_ALL,
-    todos: []
-  };
+  readonly filter$ = this.query.filter$;
+  readonly todos$  = this.query.todos$;
+  readonly history = new StateHistoryPlugin(this.query);
 
-  get filter() { return this.cache.filter }
-  get todos() { return gatherVisibleTodos(this.filter, this.cache.todos); }
-  history = {
-    hasPast: false,
-    hasFuture: false,
-    undo: NOOP,
-    redo: NOOP
-  };
+  constructor(private store: TodosStore, private query: TodosQuery) { }
   
+  addTodo(text: string)   { this.store.add( createTodo(text) ); }
+  deleteTodo({id})        { this.store.remove(id); }
+  toggleComplete({ id })  { todosStore.update(id, toggleCompleted); }
 
-  addTodo(text: string)  { this.handleAction(at.Add, text); }
-  deleteTodo({id})       { this.handleAction(at.Delete, id); }
-  toggleComplete({ id }) { this.handleAction(at.ToggleStatus, id); }
-  updateFilter(filter: Filter) { this.handleAction(at.UpdateFilter, filter); }
-
-  /**
-   * Subscription for notifications when state changes
-   */
-  subscribe(notify: TodosStateCallback): Subscription {
-    this.subscribers.push(notify);
-    notify({...this.cache});
-    return {
-      unsubscribe: () => {
-        this.subscribers = this.subscribers.filter(it => it !== notify);
-      }
-    };
-  }
-
-  /**
-   * 1) Curry the current state...
-   * 2) Reduce the action
-   * 3) Update cached state
-   */
-  private handleAction(type: TodoActionType, payload:any) {    
-    this.cache = todoReducer(this.cache, {type, payload});
-    this.subscribers.map(notify => notify({...this.cache}));    
-  }
-
+  updateFilter(filter: VISIBILITY_FILTER) {
+    this.store.update( produce((draft:TodosState) => { 
+        draft.filter = filter; 
+    }));
+  }  
 }
 
+export const facade = new TodosFacade(todosStore, todosQuery);
 
 
-
-export const facade = new TodosFacade();

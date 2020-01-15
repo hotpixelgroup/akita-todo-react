@@ -51,6 +51,7 @@ export const AddTodo: React.FC<AddTodoProps> = ({onAdd}) => {
         <IonIcon icon={alarm} style={iconGap(hasText)}/>
         <form onSubmit={onSubmit}>
           <IonInput value={text} 
+                    autofocus
                     placeholder="Add a todo:" 
                     onIonChange={updateText}
                     onIonBlur={() => reset()}></IonInput>            

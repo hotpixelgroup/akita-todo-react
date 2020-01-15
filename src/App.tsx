@@ -28,7 +28,7 @@ export const App: React.FC = () => {
             <IonTitle slot="start">           
               Todo Manager 
             </IonTitle>
-           <IonItem href="#" slot="end" style={readBlog}>
+           <IonItem href="http://bit.ly/react-facades" target="_blank" slot="end" style={readBlog}>
               <IonIcon icon={logoBuffer} />
               <IonLabel style={{paddingLeft: '3px'}}>Read Blog</IonLabel>             
            </IonItem>

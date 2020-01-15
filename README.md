@@ -1,14 +1,33 @@
-## Todo React
+## React Facades + RxJS
 
-[![image](https://user-images.githubusercontent.com/210413/71914499-53643c00-313f-11ea-96b0-db351a120e85.png)](https://codesandbox.io/s/react-todo-akita-usetodohook-qz7m3)
+This repository provides tutorials to demonstrate the use of great state management using RxJS, Facades, and Akita.
 
->  Click here for [Live Demo](https://codesandbox.io/s/react-todo-akita-usetodohook-qz7m3)
+[![image](https://user-images.githubusercontent.com/210413/72391576-2392d680-36f3-11ea-84ae-f5598f04d10a.png)](https://codesandbox.io/s/react-todo-akita-final-qz7m3)
+
+>  Click here for [Live Demo](https://codesandbox.io/s/react-todo-akita-final-qz7m3)
+
+<br/>
+
 ### Introduction
 
-This applications uses Akita and custom React hooks to demonstrate how powerful state management is easily supported... with super clean views. 
+Powerful state management is easily supported... with super clean views. With the *custom hook + Facade* architecture handles all the complexity of state management, data pushing to views, and view change detections.
 
-The hook + facade handle all the complexity of state management, data pushing to views, and view change detections.
+[![](https://i.imgur.com/nPw0SOZ.png)](http://bit.ly/react-facades)
 
+Unlike Redux - where developers have to dispatch actions - the `TodosFacade` API is called directly from the view component event handlers. 
+> This approach radically simplifies the code complexity and reduces cruft.
+
+<br/>
+
+----
+
+<br/>
+
+### Blog Post
+
+[![image](https://user-images.githubusercontent.com/210413/72539488-fe15e200-3844-11ea-9628-5a80f1a55dc9.png)](http://bit.ly/react-facades)
+
+Developers are encouraged to read the full-tutorial blog post: [**RxJS Facades in React**](http://bit.ly/react-facades)
 
 <br/>
 
@@ -20,14 +39,13 @@ The hook + facade handle all the complexity of state management, data pushing to
 
 ```jsx
 export const TodosPage: React.FC = () => {
-  const {filter, todos, facade} = useTodosHook();
-  const onChange = (value: any) => facade.updateFilter(value);
+  const [filter, todos, facade] = useTodosHook();
   const history = facade.history;
 
   return (
     <div className="todoPage">
       <div className="toolbar">
-        <Filters onChange={onChange} selectedFilter={filter} />
+        <Filters onChange={val => facade.updateFilter(val)} selectedFilter={filter} />
         <TodoForm onAdd={(item) => facade.addTodo(item)} />
         
         <div className="history">
@@ -47,24 +65,23 @@ export const TodosPage: React.FC = () => {
 };
 ```
 
-### Implement Custom Hooks
+### Implement Custom Hooks + Observables
 
 With a custom facade `TodosFacade` and hook `useObservable()`, implementing a Todo hook is trivial.
 > Notice the use of Akita state management is hidden inside the `TodosFacade` implementation
 
 ```ts
 import { useObservable } from '@mindspace-io/utils';
-
 import { facade, TodosFacade } from './todos.facade';
 import { VISIBILITY_FILTER as v, Todo} from './todo.model';
 
-export interface TodoHookState { filter: string; todos: Todo[]; facade: TodosFacade; }
+export type TodoHookTuple = [string, Todo[], TodosFacade ];
 
-export function useTodosHook(): TodoHookState {
+export function useTodosHook(): TodoHookTuple {
   const [filter] = useObservable(facade.filter$, v.SHOW_ALL);
   const [todos] = useObservable(facade.todos$, []);
 
-  return {filter, todos: todos , facade};
+  return [filter, todos, facade];
 }
 ```
 
@@ -76,22 +93,16 @@ Akita will manage state for Todos, immutable 1-way data flows, and data pushing 
 export class TodosFacade {
   readonly filter$ = this.query.filter$;
   readonly todos$ = this.query.visibleTodos$;  
-  readonly history: StateHistoryPlugin;
+  readonly history = new StateHistoryPlugin(this.todosQuery);
 
-  constructor(private store: TodosStore, private query: TodosQuery) {
-    this.history = new StateHistoryPlugin(todosQuery);
-  }
+  constructor(private store: TodosStore, private query: TodosQuery) { }
 
-  updateFilter(filter: number) { this.store.update(
-    state => ({ ...state, filter }) ); 
-  }
-
+  addTodo(text: string)        { this.store.add( createTodo(text)); }
+  deleteTodo({id}: Todo)       { this.store.remove(id); }
+  updateFilter(filter: number) { this.store.update({filter}) }  
   toggleComplete({ id }: Todo) { this.store.update(id, entity => {
     return { completed: !entity.completed };
   ))};
-
-  addTodo(text: string) { this.store.add( createTodo(text)); }
-  deleteTodo({id}: Todo) { this.store.remove(id); }
 }
 
 export const facade = new TodosFacade(todosStore, todosQuery);
@@ -99,9 +110,7 @@ export const facade = new TodosFacade(todosStore, todosQuery);
 
 ### Enforcing immutable data with ImmerJS
 
-Immer.js will protect all state data from external, direct mutations.
-
-Using the `produce(...)` function the facade can easily mutate a **draft** version:
+Immer.js will protect all state data from external, direct mutations. Using the `produce(...)` function the facade can easily mutate a **draft** version:
 
 ```ts
 import { produce } from 'immer';
@@ -110,7 +119,6 @@ export class TodosFacade {
 
   updateFilter(filter: VISIBILITY_FILTER) {
     this.store.update( produce((draft:TodosState) => {
-      // Mutate draft properties directly and easily
       draft.filter = filter;
     }));
   }

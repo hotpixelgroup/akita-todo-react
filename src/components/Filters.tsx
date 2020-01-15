@@ -2,7 +2,7 @@ import * as React from 'react';
 import { IonItem, IonLabel, IonSelect, IonSelectOption} from '@ionic/react';
 
 const inlineItem = {
-  'width': '30vw',
+  'width': '40vw',
   '--min-height': '20px',
   '--border-radius': '5px',
   'padding': '15px',
@@ -10,7 +10,7 @@ const inlineItem = {
   display: 'inline-block'
 } as React.CSSProperties;
 
-export interface FiltersProps {
+export type FiltersProps = {
   onChange: (filter: string) => void;
   selectedFilter: string;
 }
@@ -19,8 +19,9 @@ export const Filters: React.FC<FiltersProps> = ({onChange,selectedFilter}) => {
   const notifyFilterChange = (e: CustomEvent) =>onChange(e.detail.value);
   return (
     <IonItem style={inlineItem}>
-      <IonLabel>Filter by:</IonLabel>
+      <IonLabel>Show:</IonLabel>
       <IonSelect interface="popover"
+               style={{width: '100%', textAlign: 'right'}}
                 value={selectedFilter}
                 onIonChange={notifyFilterChange}>
         <IonSelectOption value="SHOW_ALL">All</IonSelectOption>

@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { IonFooter, IonToolbar, IonButton } from '@ionic/react';
 
+import { useTodosHook } from '../state';
 import { TodoList, AddTodo, Filters } from './index';
-import { useTodosHook } from '../state/todos.hook';
+
+export const startHere = "https://user-images.githubusercontent.com/210413/72477181-9748e800-37b4-11ea-8abd-8db0da3d91de.png" 
 
 const todoBar = {
   display: 'flex', 
@@ -12,27 +14,34 @@ const todoBar = {
   paddingTop: '5px'
 } as React.CSSProperties;
 
+const help = {
+  position: 'absolute',
+  left: '330px',
+  top: '100px'
+} as React.CSSProperties;
+
 export const TodosPage: React.FC = () => {
-  const [filter, todos, facade] = useTodosHook()
+  const [filter, todos, facade] = useTodosHook();
   const history = facade.history;
 
   return (
     <>
       <div style={todoBar}>
         <AddTodo onAdd={(item) => facade.addTodo(item)} />
-        <Filters selectedFilter={filter} 
-                 onChange={(value: any) => facade.updateFilter(value)} />
+        <Filters onChange={(value: any) => facade.updateFilter(value)} selectedFilter={filter} />
       </div>
       
       <TodoList todos={todos}
                 onToggle={(item) => facade.toggleComplete(item)}
                 onDelete={(item) => facade.deleteTodo(item)}      />
+      
+      { !todos.length && <img src={startHere} style={help}/> }
 
       <IonFooter className="footer" color="secondary">
         <IonToolbar>
-          <div style={{position: 'absolute', right: '20px', top: '3px'}}>
-            <IonButton onClick={() => history.undo()} disabled={!history.hasPast} color={facade.todos.length ? 'success' : 'white'}>   Undo </IonButton>
-            <IonButton onClick={() => history.redo()} disabled={!history.hasFuture} color={facade.todos.length ? 'success' : 'white'}> Redo </IonButton>
+        <div style={{position: 'absolute', right: '20px', top: '3px'}}>
+            <IonButton onClick={() => history.undo()} disabled={!history.hasPast} color={todos.length ? 'success' : 'white'}>   Undo </IonButton>
+            <IonButton onClick={() => history.redo()} disabled={!history.hasFuture} color={todos.length ? 'success' : 'white'}> Redo </IonButton>
           </div>
         </IonToolbar>
       </IonFooter>  
