@@ -28,7 +28,7 @@
     "eject": "react-scripts-ts eject"
   },
   "devDependencies": {
-    "@angular/core": "^8.2.14",
+    "@angular/core": "^11.0.5",
     "@babel/plugin-transform-typescript": "^7.7.0",
     "@babel/preset-react": "^7.7.4",
     "@types/jest": "^22.1.3",
