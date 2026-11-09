@@ -1,0 +1,2 @@
+# Claude Code per-user settings (can hold raw commands with secrets)
+.claude/settings.local.json
